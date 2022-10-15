@@ -25,23 +25,28 @@ jobs:
       - run:
           name: "Test"
           command: "echo Testing project!"
-  deploy:
+  deploy_staging:
     machine:
       image: ubuntu-2004:current
     steps:
       - checkout
       - run:
           name: "Deploy"
-          command: "echo Deploying project!"
+          command: "echo Deploying project to staging!"
+  deploy_production:
+    machine:
+      image: ubuntu-2004:current
+    steps:
+      - checkout
+      - run:
+          name: "Deploy"
+          command: "echo Deploying project to production!"
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   main-workflow:
     jobs:
-      - build:
-          filters:
-            branches:
-              only: staging
+      - build
       - test:
           requires:
             - build
@@ -49,6 +54,17 @@ workflows:
           type: approval
           requires:
             - test
-      - deploy:
+      - deploy_staging:
+          filters:
+            branches:
+              only:
+                - staging
           requires:
-            - approve_deploy_staging
+            - test
+      - deploy_production:
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - test
