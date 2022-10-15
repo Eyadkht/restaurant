@@ -43,8 +43,8 @@ workflows:
             branches:
               only: staging
       - test:
-        requires:
-          - build
+          requires:
+            - build
       - approve_deploy_staging:
           type: approval
           requires:
