@@ -2,6 +2,15 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+staging: &staging
+  filters:
+    branches:
+      only: staging
+
+production: &production
+  filters:
+    branches:
+      only: main
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
@@ -16,7 +25,7 @@ jobs:
       - checkout
       - run:
           name: "Build"
-          command: "echo Building the project"
+          command: "echo Building project!"
   test:
     machine:
       image: ubuntu-2004:current
@@ -24,7 +33,7 @@ jobs:
       - checkout
       - run:
           name: "Test"
-          command: "echo Testing the project"
+          command: "echo Testing project!"
   deploy:
     machine:
       image: ubuntu-2004:current
@@ -32,35 +41,31 @@ jobs:
       - checkout
       - run:
           name: "Deploy"
-          command: "echo Deploying the project"
-
+          command: "echo Deploying project!"
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   staging-workflow:
-    filters:
-      branches:
-        - only:
-          - staging
     jobs:
-      - build
+      - build:
+        <<: *staging
       - test
       - approve_deploy_staging:
-        type: approval
+          type: approval
+          requires:
+            - test
       - deploy:
-        requires:
-          - approve_deploy_staging
-  main-workflow:
-    filters:
-      branches:
-        - only:
-          - main
+          requires:
+            - approve_deploy_staging
+  production-workflow:
     jobs:
-      - build
+      - build:
+        <<: *production
       - test
       - approve_deploy_production:
-        type: approval
+          type: approval
+          requires:
+            - test
       - deploy:
-        requires:
-          - approve_deploy_production
-
+          requires:
+            - approve_deploy_production
