@@ -60,11 +60,11 @@ workflows:
               only:
                 - staging
           requires:
-            - test
+            - approve_deployment
       - deploy_production:
           filters:
             branches:
               only:
                 - main
           requires:
-            - test
+            - approve_deployment
