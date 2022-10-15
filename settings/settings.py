@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
 from pathlib import Path
+import warnings; 
 
+warnings.filterwarnings('error')
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -72,12 +74,6 @@ WSGI_APPLICATION = 'settings.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
-print(os.environ.get('SQL_DATABASE'))
-print(os.environ.get('SQL_USERNAME'))
-print(os.environ.get('SQL_PASSWORD'))
-print(os.environ.get('DB_HOST'))
-print(os.environ.get('SQL_PORT'))
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
