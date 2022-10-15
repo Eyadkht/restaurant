@@ -50,7 +50,7 @@ workflows:
       - test:
           requires:
             - build
-      - approve_deploy_staging:
+      - approve_deployment:
           type: approval
           requires:
             - test
